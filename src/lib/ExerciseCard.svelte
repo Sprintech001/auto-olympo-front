@@ -13,7 +13,7 @@
 
     async function getExerciseById(exerciseId) {
         try {
-            const response = await fetch(`/api/exercise/${exerciseId}`);
+            const response = await fetch(`http://191.252.195.85:5001/api/exercise/${exerciseId}`);
 
             if (!response.ok) {
                 throw new Error(`Erro: ${response.statusText}`);
@@ -43,7 +43,7 @@
         console.log(`Tentando excluir o relacionamento User-Exercise para userId=${userId} e exerciseId=${exerciseId}`);
 
         try {
-            const response = await fetch(`/api/userexercise?userId=${userId}&exerciseId=${exerciseId}`, {
+            const response = await fetch(`http://191.252.195.85:5001/api/userexercise?userId=${userId}&exerciseId=${exerciseId}`, {
                 method: 'DELETE',
             });
 
@@ -68,7 +68,7 @@
                 selectedExerciseId.set(exerciseDetails.id);
             }}
             class="w-full h-44 flex flex-col items-start justify-center p-4 rounded-xl bg-cover bg-top"
-            style={`background-image: url('/api/Files/${exerciseDetails.imagePath}')`}
+            style={`background-image: url('http://191.252.195.85:5001/api/Files/${exerciseDetails.imagePath}')`}
         >
             <h2 class="text-5xl">{exerciseDetails.name}</h2>
         </a>

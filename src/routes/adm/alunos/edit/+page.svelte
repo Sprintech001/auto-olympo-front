@@ -70,7 +70,7 @@
         }
 
         try {
-            const response = await fetch(`/api/exercise/${exercise.id}`, {
+            const response = await fetch(`http://191.252.195.85:5001/api/exercise/${exercise.id}`, {
                 method: 'PUT',
                 body: formData,
             });
@@ -102,7 +102,7 @@
                 throw new Error('ID do exercício não encontrado');
             }
 
-            const response = await fetch(`/api/exercise/${exerciseId}`);
+            const response = await fetch(`http://191.252.195.85:5001/api/exercise/${exerciseId}`);
             if (!response.ok) {
                 throw new Error(`Erro: ${response.statusText}`);
             }
@@ -127,7 +127,7 @@
 <section class="w-full min-h-screen flex flex-col items-start py-4 px-8 gap-4 bg-[#2c2c2c] font-karantina uppercase">
     <div on:click={addImage} id="hero"
         class="w-full h-60 flex items-start justify-between p-4 rounded-xl bg-cover bg-top"
-        style="background-image: url('/api/Files/{exercise.imagePath}')">
+        style="background-image: url('http://191.252.195.85:5001/api/Files/{exercise.imagePath}')">
         <a href="/adm/exercises" 
             on:click={(e) => e.stopPropagation()} 
             class="bg-[#2c2c2c] p-2 rounded-full border border-zinc-600"> 
