@@ -13,7 +13,7 @@
 
         try {
             const response = await fetch(
-                "http://191.252.195.85:5001/api/auth/login",
+                "/api//api/auth/login",
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },

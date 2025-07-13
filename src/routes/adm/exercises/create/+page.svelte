@@ -21,7 +21,7 @@
         }
 
         try {
-            const response = await fetch('http://191.252.195.85:5001/api/exercise', {
+            const response = await fetch('/api//api/exercise', {
                 method: 'POST',
                 body: formData,
             });
@@ -40,7 +40,7 @@
 
     async function fetchExercises() {
         try {
-            const response = await fetch('http://191.252.195.85:5001/api/exercise');
+            const response = await fetch('/api//api/exercise');
             if (!response.ok) {
                 throw new Error(`Erro: ${response.statusText}`);
             }

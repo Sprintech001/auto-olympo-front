@@ -49,7 +49,7 @@
         };
 
         try {
-            const response = await fetch("http://191.252.195.85:5001/api/auth/register", {
+            const response = await fetch("/api//api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(requestBody),
