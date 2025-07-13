@@ -36,7 +36,7 @@
         const formData = new FormData();
         formData.append('file', imageFile);
 
-        const uploadResponse = await fetch('http://localhost:5001/api/user/upload', {
+        const uploadResponse = await fetch('/api/user/upload', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${loggedUser.token}`
@@ -85,7 +85,7 @@
                 imagePath: user.imagePath || null  
             };
 
-            const userResponse = await fetch(`http://localhost:5001/api/auth/update/${user.fullUserData.userData.id}`, { 
+            const userResponse = await fetch(`/api/auth/update/${user.fullUserData.userData.id}`, { 
                 method: 'PUT',
                 headers: 
                 {
