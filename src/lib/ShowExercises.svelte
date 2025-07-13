@@ -15,7 +15,7 @@
             }
             
             const data = await response.json();
-            let allExercises = data["$values"].map(exercise => ({
+            let allExercises = data.map(exercise => ({
                 ...exercise,
                 checked: false
             }));
