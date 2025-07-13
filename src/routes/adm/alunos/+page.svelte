@@ -78,7 +78,7 @@
                         </div>
                     </div>
                     <button id="lixo" type="button" on:click|stopPropagation={() => deleteUser(aluno.appUser.id)}>
-                        <img src="/src/images/lixeira.svg" alt="Excluir">
+                        <img src="/src//lixeira.svg" alt="Excluir">
                     </button>                    
                 {/each}
             {/if}

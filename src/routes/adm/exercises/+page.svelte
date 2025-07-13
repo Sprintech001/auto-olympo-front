@@ -76,7 +76,7 @@
 
                 </a>
                 <button id="lixo" type="button" on:click={() => deleteExercise(exercise.id)}>
-                    <img src="/src/images/lixeira.svg" alt="Excluir">
+                    <img src="/src//lixeira.svg" alt="Excluir">
                 </button>
                 {/each}
             </div>

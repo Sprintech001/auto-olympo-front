@@ -81,7 +81,7 @@
 
     {#if (viewDelete)}
         <button id="lixo" type="button" on:click={() => deleteUserExercise(exercise.userId, exercise.exerciseId)}>
-            <img src="/src/images/lixeira.svg" alt="Excluir">
+            <img src="/src//lixeira.svg" alt="Excluir">
         </button>
     {/if}
 </div>
