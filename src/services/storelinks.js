@@ -52,7 +52,7 @@ export async function fetchUserData() {
         throw new Error("Usuário não autenticado. Token ausente.");
     }
 
-    const response = await fetch(`/api//api/auth/me`, {
+    const response = await fetch(`/api/auth/me`, {
         method: "GET",
         headers: {
             Authorization: `Bearer ${loggedUser.token}`,

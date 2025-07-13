@@ -15,7 +15,7 @@
 
     async function fetchExercises() {
         try {
-            const response = await fetch('/api//api/exercise');
+            const response = await fetch('/api/exercise');
             if (!response.ok) {
                 throw new Error(`Erro: ${response.statusText}`);
             }
@@ -30,7 +30,7 @@
     const deleteExercise = async (exerciseId) => {
 
         try {
-            const response = await fetch(`/api//api/exercise/${exerciseId}`, {
+            const response = await fetch(`/api/exercise/${exerciseId}`, {
                 method: "DELETE",
             });
 
@@ -69,7 +69,7 @@
                 {#each exercises as exercise}
                 <a href="/adm/exercises/edit" 
                     class="w-full h-44 flex flex-col items-start justify-center p-4 rounded-xl bg-cover bg-top"  
-                    style={`background-image: url('/api//api/Files/${exercise.imagePath}')`}
+                    style={`background-image: url('/api/Files/${exercise.imagePath}')`}
                     on:click={() => setSelectedExercise(exercise.id)}>
 
                     <h2 class="text-5xl">{exercise.name}</h2>

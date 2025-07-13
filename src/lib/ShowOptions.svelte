@@ -43,7 +43,7 @@
                 Day: dayMapping[day.name],
             };
 
-            const response = await fetch(`/api//api/session`, {
+            const response = await fetch(`/api/session`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
