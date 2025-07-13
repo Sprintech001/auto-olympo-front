@@ -23,7 +23,7 @@
             if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
             const data = await response.json();
             console.log('data:', data);
-            return data["$values"] || data;
+            return data;
         } catch (err) {
             console.error("Erro ao buscar exercícios do usuário:", err);
             error = err.message;
