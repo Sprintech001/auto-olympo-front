@@ -1,0 +1,20 @@
+{
+  "name": "Olympo",
+  "short_name": "Olympo",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000",
+  "icons": [
+    {
+      "src": "/olympo-yellow.png",
+      "sizes": "66x66",
+      "type": "image/png"
+    },
+    {
+      "src": "/olympo-yellow.png",
+      "sizes": "66x66",
+      "type": "image/png"
+    }
+  ]
+}

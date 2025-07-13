@@ -25,7 +25,7 @@
 
     const getSessionsByUserAndExercise = async (userId, exerciseId) => {
         try {
-            const response = await fetch(`/api/userexercise/sessions?userId=${userId}&exerciseId=${exerciseId}`);
+            const response = await fetch(`http://localhost:5001/api/userexercise/sessions?userId=${userId}&exerciseId=${exerciseId}`);
 
             if (!response.ok) {
                 if (response.status === 404) return [];
@@ -55,7 +55,7 @@
 
             console.log('Atualizando sessão com os dados:', formData);
 
-            const response = await fetch(`/api/session/${sessionData.id}`, {
+            const response = await fetch(`http://localhost:5001/api/session/${sessionData.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
@@ -84,7 +84,7 @@
     const deleteSession = async (sessionId) => {
         try {
             console.log(`Tentando deletar a sessão com ID: ${sessionId}`);
-            const response = await fetch(`/api/session/${sessionId}`, {
+            const response = await fetch(`http://localhost:5001/api/session/${sessionId}`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' }
             });

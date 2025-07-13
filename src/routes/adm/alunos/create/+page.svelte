@@ -11,7 +11,7 @@
     let password = '';
     let message = '';
 
-    let api = new APIService('/api/auth');
+    let api = new APIService('http://localhost:5001/api/auth');
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -33,7 +33,7 @@
 
     async function fetchAlunos() {
         try {
-            const response = await fetch('/api/auth/full-users/2');
+            const response = await fetch('http://localhost:5001/api/auth/full-users/2');
             if (!response.ok) {
                 throw new Error(`Erro: ${response.statusText}`);
             }

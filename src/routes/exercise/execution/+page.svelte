@@ -84,7 +84,7 @@
 
     <video id="videoPreview" width="320" height="240" controls>
         {#if exercise.videoPath}
-            <source src={`/api/Files/${exercise.videoPath}`} />
+            <source src={`http://localhost:5001/api/Files/${exercise.videoPath}`} />
             <track
                 kind="captions"
                 src="path/to/captions.vtt"

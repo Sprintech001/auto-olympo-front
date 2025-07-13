@@ -47,7 +47,7 @@
 
     async function fetchExercises(userId) {
         try {
-            const response = await fetch(`/api/userexercise/sessions/${userId}`);
+            const response = await fetch(`http://localhost:5001/api/userexercise/sessions/${userId}`);
             if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
             const data = await response.json();
             console.log('data:', data);
@@ -61,7 +61,7 @@
 
     onMount(async () => {
         try {
-            const res = await fetch('/api/user/now');
+            const res = await fetch('http://localhost:5001/api/user/now');
             const json = await res.json();
 
             dataofMount = `${json.date} ${json.time}`;
