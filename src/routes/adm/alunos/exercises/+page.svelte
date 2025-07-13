@@ -85,27 +85,20 @@
     }
 
     onMount(() => {
-        const alunoData = page?.state?.aluno || JSON.parse(sessionStorage.getItem('aluno'));
-        
-        if (alunoData?.$values) {
-            aluno = alunoData.$values[0];
-            sessionStorage.setItem('aluno', JSON.stringify({ $values: [aluno] }));
-        } else if (alunoData?.appUser) {
-            aluno = alunoData; 
-        } else {
-            console.log('Aluno não encontrado no estado ou no sessionStorage.');
+    try {
+        aluno = page?.state?.aluno || JSON.parse(sessionStorage.getItem('aluno'));
+
+        if (!aluno || !aluno.appUser?.id) {
+            throw new Error("Aluno ou ID do usuário inválido.");
         }
 
-        const appUserId = aluno?.appUser?.id || alunoData?.$values?.[0]?.appUser?.id;
-        if (appUserId) {
-            aluno = { ...aluno, appUser: { ...aluno.appUser, id: appUserId } }; 
-            console.log('id:', aluno.appUser.id); 
-            carregarExercicios();
-        } else {
-            console.error("appUser.id não encontrado.");
-            error = "Erro ao carregar dados do aluno.";
-        }
-    });
+        sessionStorage.setItem('aluno', JSON.stringify(aluno));
+        carregarExercicios();
+    } catch (err) {
+        console.error(err.message);
+        error = "Erro ao carregar dados do aluno.";
+    }
+});
 
 </script>
 
