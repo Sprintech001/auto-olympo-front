@@ -68,7 +68,7 @@
         }
 
         try {
-            const response = await fetch(`/api/exercise/${exercise.id}`, {
+            const response = await fetch(`http://191.252.195.85:5001/api/exercise/${exercise.id}`, {
                 method: 'PUT',
                 body: formData,
             });
