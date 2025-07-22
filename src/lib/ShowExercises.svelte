@@ -9,7 +9,7 @@
 
     async function getExercises() {
         try {
-            const response = await fetch(`/api/exercise`);
+            const response = await fetch(`http://localhost:5001/api/exercise`);
             if (!response.ok) {
                 throw new Error(`Erro ao buscar exercícios: ${response.statusText}`);
             }
@@ -44,7 +44,7 @@
                     exerciseId: exercise.id
                 };
 
-                return fetch(`/api/userexercise`, {
+                return fetch(`http://localhost:5001/api/userexercise`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

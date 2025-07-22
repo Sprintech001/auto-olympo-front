@@ -34,16 +34,16 @@
     const createSession = async (day) => {
         try {
             const formData = {
-                Repetitions: parseInt(repetitions),
-                Series: parseInt(session),
-                Breaks: parseFloat(intervalTime),
-                Time: parseFloat(sessionTime),
+                Repetitions: isNaN(parseInt(repetitions)) ? repetitions : parseInt(repetitions),
+                Series: isNaN(parseInt(session)) ? session : parseInt(session),
+                Breaks: isNaN(parseFloat(intervalTime)) ? intervalTime : parseFloat(intervalTime),
+                Time: isNaN(parseFloat(sessionTime)) ? sessionTime : parseFloat(sessionTime),
                 ExerciseId: exerciseId,
                 userId: userId,
                 Day: dayMapping[day.name],
             };
 
-            const response = await fetch(`/api/session`, {
+            const response = await fetch(`http://localhost:5001/api/session`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -115,22 +115,22 @@
 
         <div class="flex flex-col gap-2">
             <label>Tempo de sessões (minutos):</label>
-            <input type="number" bind:value={sessionTime} min="1" required />
+            <input type="text" bind:value={sessionTime} min="1" required />
         </div>
 
         <div class="flex flex-col gap-2">
             <label>Quantidade de Sessões:</label>
-            <input type="number" bind:value={session} min="1" required />
+            <input type="text" bind:value={session} min="1" required />
         </div>
 
         <div class="flex flex-col gap-2">
             <label>Quantidade de repetições:</label>
-            <input type="number" bind:value={repetitions} min="1" required />
+            <input type="text" bind:value={repetitions} min="1" required />
         </div>
 
         <div class="flex flex-col gap-2">
             <label>Tempo de intervalos (minutos):</label>
-            <input type="number" bind:value={intervalTime} min="1" required />
+            <input type="text" bind:value={intervalTime} min="1" required />
         </div>
 
         <button type="submit" class="px-4 py-2 bg-[#facc15] text-black rounded">Salvar</button>
@@ -163,7 +163,7 @@
         gap: 0.5rem;
     }
 
-    input[type="number"], input[type="checkbox"] {
+    input[type="text"], input[type="checkbox"] {
         background-color: transparent;
         color: white;
         border: 1px solid white;
@@ -171,7 +171,7 @@
         border-radius: 0.25rem;
     }
 
-    input[type="number"]::placeholder {
+    input[type="text"]::placeholder {
         color: white;
     }
 

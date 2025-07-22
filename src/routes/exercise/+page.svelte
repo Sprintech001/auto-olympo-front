@@ -10,22 +10,37 @@
 
     import OlympoYellow from "../../images/olympo-yellow.png";
 
-    let exercise = { id: null, name: '', description: '', imagePath: '', videoPath: "" }; 
-    let error = null;
-    
-    async function fetchExercise() {
-        try {
-            const exerciseId = $selectedExerciseId;
-            if (!exerciseId) throw new Error("ID do exercício não encontrado");
 
-            const response = await fetch(`/api/exercise/${exerciseId}`);
-            if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
+let exercise = { id: null, name: '', description: '', imagePath: '', videoPath: "" };
+let sessionId = null;
+let session = null;
+let error = null;
 
-            exercise = await response.json();
-        } catch (err) {
-            error = err.message;
+async function fetchExercise() {
+    try {
+        const selected = $selectedExerciseId;
+        if (!selected || !selected.exerciseId) throw new Error("ID do exercício não encontrado");
+        sessionId = selected.sessionId;
+        console.log('ID do exercício:', selected.exerciseId);
+        console.log('ID da session:', sessionId);
+
+        const response = await fetch(`http://localhost:5001/api/exercise/${selected.exerciseId}`);
+        if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
+        exercise = await response.json();
+
+        if (sessionId) {
+            const sessionRes = await fetch(`http://localhost:5001/api/session/${sessionId}`);
+            if (sessionRes.ok) {
+                session = await sessionRes.json();
+                console.log('Session:', session);
+            } else {
+                console.warn('Session não encontrada:', sessionId);
+            }
         }
+    } catch (err) {
+        error = err.message;
     }
+}
 
     function goBack() {
         const previousRoute = sessionStorage.getItem("previousRoute");
@@ -43,7 +58,7 @@
 <section class="w-full min-h-dvh flex flex-col items-start gap-4 bg-[#2c2c2c]">
      <div id="hero"
         class="w-full h-60 flex items-start justify-between p-4 rounded-xl bg-cover bg-top"
-        style="background-image: url('/api/Files/{exercise.imagePath}')">
+        style="background-image: url('http://localhost:5001/api/Files/{exercise.imagePath}')">
         <a on:click={(e) => { 
                 e.stopPropagation(); 
                 goBack();
@@ -61,14 +76,27 @@
         </div>
 
         <div id="info" class="w-full flex flex-wrap itmes-center justify-between text-white text-md">
-            <div class="flex justify-between items-center gap-2">
-                <IconBarbell color="#facc15" size="32"/>
-                <span class="leading-5">Repetiçẽs <br><strong>3x12</strong></span>
-            </div>
-            <div class="flex justify-between items-center gap-2">
-                <IconFlame color="#facc15" size="32"/>
-                <span class="leading-5">Gastos <br><strong>140 Kcal</strong></span>
-            </div>
+            {#if session}
+                <div class="flex justify-between items-center gap-2">
+                    <IconBarbell color="#facc15" size="32"/>
+                    <span class="leading-5">Execução <br>
+                        <strong>{@html session.series ? session.series.replace(/\n/g, '<br>') : '-'}</strong>
+                    </span>
+                </div>
+                <div class="flex justify-between items-center gap-2">
+                    <IconFlame color="#facc15" size="32"/>
+                    <span class="leading-5">Duração <br><strong>{session.time}</strong></span>
+                </div>
+            {:else}
+                <div class="flex justify-between items-center gap-2">
+                    <IconBarbell color="#facc15" size="32"/>
+                    <span class="leading-5">Repetições <br><strong>-</strong></span>
+                </div>
+                <div class="flex justify-between items-center gap-2">
+                    <IconFlame color="#facc15" size="32"/>
+                    <span class="leading-5">Séries <br><strong>-</strong></span>
+                </div>
+            {/if}
         </div>
         <button 
             on:click={startExercise}

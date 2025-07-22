@@ -25,7 +25,7 @@
 
     const getSessionsByUserAndExercise = async (userId, exerciseId) => {
         try {
-            const response = await fetch(`/api/userexercise/sessions?userId=${userId}&exerciseId=${exerciseId}`);
+            const response = await fetch(`http://localhost:5001/api/userexercise/sessions?userId=${userId}&exerciseId=${exerciseId}`);
 
             if (!response.ok) {
                 if (response.status === 404) return [];
@@ -55,7 +55,7 @@
 
             console.log('Atualizando sessão com os dados:', formData);
 
-            const response = await fetch(`/api/session/${sessionData.id}`, {
+            const response = await fetch(`http://localhost:5001/api/session/${sessionData.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
@@ -84,7 +84,7 @@
     const deleteSession = async (sessionId) => {
         try {
             console.log(`Tentando deletar a sessão com ID: ${sessionId}`);
-            const response = await fetch(`/api/session/${sessionId}`, {
+            const response = await fetch(`http://localhost:5001/api/session/${sessionId}`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -114,7 +114,14 @@
 
         if (userId && exerciseId) {
             isLoading = true;
-            filteredSessions = await getSessionsByUserAndExercise(userId, exerciseId);
+            const sessions = await getSessionsByUserAndExercise(userId, exerciseId);
+            filteredSessions = sessions.map(s => ({
+                ...s,
+                time: s.time ?? "",
+                series: s.series ?? "",
+                repetitions: s.repetitions ?? "",
+                breaks: s.breaks ?? ""
+            }));
             isLoading = false;
         } else {
             error = 'Usuário ou exercício não definidos.';
@@ -145,24 +152,26 @@
                 <form on:submit|preventDefault={() => updateSession(session)} class="mt-0 flex flex-col gap-4 border p-4 rounded shadow-md mb-4">
                     <input type="hidden" value={session.id} />
 
+                    <!-- <pre class="bg-zinc-900 text-yellow-400 p-2 rounded text-xs mb-2">{JSON.stringify(session, null, 2)}</pre> -->
+
                     <div class="flex flex-col gap-2">
-                        <label>Tempo de sessões (minutos):</label>
-                        <input type="number" bind:value={session.time} min="1" required class="border p-2 rounded" />
+                        <label>Tempo de sessões:</label>
+                        <input type="text" bind:value={session.time} class="border p-2 rounded" />
                     </div>
 
                     <div class="flex flex-col gap-2">
                         <label>Quantidade de Séries:</label>
-                        <input type="number" bind:value={session.series} min="1" required class="border p-2 rounded" />
+                        <textarea type="text" bind:value={session.series} class="border p-2 rounded"></textarea>
                     </div>
 
                     <div class="flex flex-col gap-2">
                         <label>Quantidade de repetições:</label>
-                        <input type="number" bind:value={session.repetitions} min="1" required class="border p-2 rounded" />
+                        <input type="text" bind:value={session.repetitions} class="border p-2 rounded" />
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <label>Tempo de intervalos (minutos):</label>
-                        <input type="number" bind:value={session.breaks} min="1" required class="border p-2 rounded" />
+                        <label>Tempo de intervalos:</label>
+                        <input type="text" bind:value={session.breaks} class="border p-2 rounded" />
                     </div>
 
                     <div class="flex justify-between mt-4">
@@ -189,7 +198,7 @@
         margin-bottom: 5px;
     }
 
-    input {
+    input, textarea {
         padding: 10px;
         border-radius: 4px;
         border: 1px solid #ccc;

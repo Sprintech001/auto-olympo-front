@@ -6,7 +6,8 @@
     import { IconChevronLeft } from '@tabler/icons-svelte';
     import Avatar from '../../../images/avatar.png';
 
-    let user = { cpf: '', name: '', email: '', phone: '', birthDate: '', image: null, imagePath: '' };
+let user = { cpf: '', name: '', email: '', phone: '', birthDate: '', image: null, imagePath: '' };
+let imagePreview = '';
     let isLoading = false;
     let error = '';
 
@@ -36,7 +37,7 @@
         const formData = new FormData();
         formData.append('file', imageFile);
 
-        const uploadResponse = await fetch('/api/user/upload', {
+        const uploadResponse = await fetch('http://localhost:5001/api/user/upload', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${loggedUser.token}`
@@ -85,7 +86,7 @@
                 imagePath: user.imagePath || null  
             };
 
-            const userResponse = await fetch(`/api/auth/update/${user.fullUserData.userData.id}`, { 
+            const userResponse = await fetch(`http://localhost:5001/api/auth/update/${user.fullUserData.userData.id}`, { 
                 method: 'PUT',
                 headers: 
                 {
@@ -114,6 +115,7 @@
         const file = e.target.files[0];
         if (file) {
             user.image = file;
+            imagePreview = URL.createObjectURL(file);
         }
     };
 
@@ -126,7 +128,11 @@
     </div>
 
     <div class="w-full flex flex-col gap-4 items-center text-center">
-        <img src={Avatar} alt="Avatar" class="w-20 h-20 rounded-full" />
+        <img
+            src={imagePreview || user.imagePath || Avatar}
+            alt="Avatar"
+            class="w-20 h-20 rounded-full cursor-pointer object-cover"
+            on:click={() => document.getElementById('image').click()} />
         <h1 class="w-3/5 text-white text-2xl font-karantina">
             {user?.name || "Usuário"}
         </h1>
@@ -169,7 +175,7 @@
 
             <div class="flex flex-col gap-2">
                 <label for="image" class="text-white">Imagem:</label>
-                <input id="image" type="file" accept="image/*" on:change={handleImageChange} class="p-2 rounded border" />
+                <input id="image" type="file" accept="image/*" on:change={handleImageChange} class="p-2 rounded border" style="display:none;" />
             </div>            
 
             {#if error}

@@ -13,7 +13,7 @@
 
         try {
             const response = await fetch(
-                "/api/auth/login",
+                "http://localhost:5001/api/auth/login",
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },

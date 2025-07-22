@@ -19,20 +19,21 @@
     ];
 
     let exercises = [];
-    let filteredExercises = [];
+let filteredExercises = [];
+let diaSelecionado = null;
     let error = null;
     let dataofMount;
     let diaSemanaAtual = 0;
     let user;
 
     const dayNames = {
-        0: 'Domingo',
-        1: 'Segunda-feira',
-        2: 'Terça-feira',
-        3: 'Quarta-feira',
-        4: 'Quinta-feira',
-        5: 'Sexta-feira',
-        6: 'Sábado'
+        0: 'DOMINGO',
+        1: 'SEGUNDA-FEIRA',
+        2: 'TERA-FEIRA',
+        3: 'QUARTA-FEIRA',
+        4: 'QUINTA-FEIRA',
+        5: 'SEXTA-FEIRA',
+        6: 'SÁBADO'
     };
 
     function navigateTo(newRoute) {
@@ -47,7 +48,7 @@
 
     async function fetchExercises(userId) {
         try {
-            const response = await fetch(`/api/userexercise/sessions/${userId}`);
+            const response = await fetch(`http://localhost:5001/api/userexercise/sessions/${userId}`);
             if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
             const data = await response.json();
             console.log('data:', data);
@@ -61,7 +62,7 @@
 
     onMount(async () => {
         try {
-            const res = await fetch('/api/user/now');
+            const res = await fetch('http://localhost:5001/api/user/now');
             const json = await res.json();
 
             dataofMount = `${json.date} ${json.time}`;
@@ -77,11 +78,12 @@
             };
 
             diaSemanaAtual = diasSemanaMap[json.dayOfWeek] ?? 0;
+            diaSelecionado = diaSemanaAtual;
             console.log("userSession atual:", user);
 
             if (user?.id) {
                 exercises = await fetchExercises(user.fullUserData.userData.id);
-                filteredExercises = exercises.filter(session => session.day === diaSemanaAtual);
+                filteredExercises = exercises.filter(session => session.day === diaSelecionado);
             }
             console.log("Exercícios filtrados pelo dia:", filteredExercises);
         } catch(e) {
@@ -91,6 +93,10 @@
 
         sessionStorage.setItem('previousRoute', $page.url.pathname);
     });
+
+$: if (exercises && diaSelecionado !== null) {
+    filteredExercises = exercises.filter(session => session.day === +diaSelecionado);
+}
 
 </script>
 
@@ -104,7 +110,11 @@
                 navigateTo("/user");
             }}
             class="w-full flex gap-4 items-center">
-            <img src={Avatar} alt="Logo Olympo" class="w-20 h-20 rounded-full" />
+            <img
+                src={user?.imagePath ? `http://localhost:5001/api/Files/${user.imagePath}` : Avatar}
+                alt="Avatar"
+                class="w-20 h-20 rounded-full object-cover"
+            />
             <h1 class="w-3/5 text-white text-2xl font-karantina">
                 Bem vindo de volta <br />{user?.userName || "Usuário"}
             </h1>
@@ -139,7 +149,7 @@
             </div>
         </div>
 
-        <div id="exercicios" class="w-full flex flex-col gap-4 text-white">
+        <!-- <div id="exercicios" class="w-full flex flex-col gap-4 text-white">
             <div class="w-full flex justify-between items-center">
                 <h2 class="text-2xl">Exercícios de hoje - ({dayNames[diaSemanaAtual] ?? "Dia"})</h2>
             </div>
@@ -150,6 +160,33 @@
                     {/each}
                 {:else}
                     <p>Nenhum exercício encontrado para hoje.</p>
+                {/if}
+            </div>
+        </div> -->
+
+        <div id="semanal" class="w-full flex flex-col gap-4 text-white">
+            <div class="w-full flex justify-between items-center">
+                <h2 class="text-4xl">Seus Exercicios</h2>
+            </div>
+            <div class="flex flex-row gap-2 justify-center">
+                {#each Object.entries(dayNames) as [idx, name]}
+                    <button
+                        class="w-20 h-14 text-lg rounded shadow transition font-bold
+                            {+idx === diaSelecionado ? 'bg-[#FFDA00] text-black' : 'bg-[#6B6B6B] text-white hover:bg-yellow-200'}"
+                        type="button"
+                        on:click={() => diaSelecionado = +idx}
+                    >
+                        {name.slice(0,3)}
+                    </button>
+                {/each}
+            </div>
+            <div class="w-full flex flex-col gap-4 mt-4">
+                {#if filteredExercises.length > 0}
+                    {#each filteredExercises as session (session.id)}
+                        <ExerciseCard exercise={session} />
+                    {/each}
+                {:else}
+                    <p>Nenhum exercício encontrado para este dia.</p>
                 {/if}
             </div>
         </div>

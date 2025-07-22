@@ -8,7 +8,31 @@ export const sessionStore = writable([]);
 
 export const previousRoute = writable(null);
 
-export const userSession = writable(null); 
+
+function createUserSessionStore() {
+    let initial = null;
+    if (typeof window !== 'undefined') {
+        const saved = localStorage.getItem('userSession');
+        if (saved) {
+            try {
+                initial = JSON.parse(saved);
+            } catch {}
+        }
+    }
+    const store = writable(initial);
+    store.subscribe(value => {
+        if (typeof window !== 'undefined') {
+            if (value) {
+                localStorage.setItem('userSession', JSON.stringify(value));
+            } else {
+                localStorage.removeItem('userSession');
+            }
+        }
+    });
+    return store;
+}
+
+export const userSession = createUserSessionStore();
 
 export function setSelectedExercise(id) {
     selectedExerciseId.set(id);
@@ -38,6 +62,8 @@ export function setUserSession(userData) {
         phone: userData.phone,
         type: userData.type,
         message: userData.message,
+        imagePath: userData.imagePath,
+        image: userData.image,
         fullUserData: userData.fullUserData
     });
 }
@@ -52,7 +78,7 @@ export async function fetchUserData() {
         throw new Error("Usuário não autenticado. Token ausente.");
     }
 
-    const response = await fetch(`/api/auth/me`, {
+    const response = await fetch(`http://localhost:5001/api/auth/me`, {
         method: "GET",
         headers: {
             Authorization: `Bearer ${loggedUser.token}`,
@@ -68,7 +94,9 @@ export async function fetchUserData() {
     userSession.set({
         token: loggedUser.token,
         identityData: data.IdentityData,
-        userData: data.UserData
+        userData: data.UserData,
+        imagePath: data.UserData?.imagePath || data.UserData?.image || null,
+        image: data.UserData?.image || null
     });
 
     return data;

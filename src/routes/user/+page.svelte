@@ -13,7 +13,13 @@
         IconRun,
         IconSettings,
         IconUser,
+        IconLogout,
     } from "@tabler/icons-svelte";
+    import { clearUserSession } from '/src/services/storelinks.js';
+    function logout() {
+        clearUserSession();
+        goto('/login');
+    }
 
     let user;
     $: $userSession && (user = $userSession);
@@ -39,7 +45,11 @@
             <img src={OlympoYellow} alt="Logo Olympo" class="w-8 h-8 rounded-full" />
         </div>
         <div class="w-full flex flex-col gap-4 items-center text-center">
-            <img src={Avatar} alt="Avatar" class="w-20 h-20 rounded-full" />
+            <img
+                src={user?.imagePath ? `http://localhost:5001/api/Files/${user.imagePath}` : Avatar}
+                alt="Avatar"
+                class="w-20 h-20 rounded-full object-cover"
+            />
             <h1 class="w-3/5 text-white text-2xl font-karantina">
                 {user?.userName || "Usuário"}
             </h1>
@@ -75,10 +85,13 @@
         </div>
 
         <div id="ajustes" class="w-full p-4 flex flex-col gap-4 bg-[#D9D9D9] bg-opacity-10 rounded-xl text-2xl text-white">
-            <a href="#" class="w-full flex items-center justify-between"><span class="flex gap-2"><IconUser size="28" color="#facc15"/> Perfil </span> <IconChevronRight color="#facc15"/></a>
+            <a href="/user/update" class="w-full flex items-center justify-between"><span class="flex gap-2"><IconUser size="28" color="#facc15"/> Perfil </span> <IconChevronRight color="#facc15"/></a>
             <a href="" class="w-full flex items-center justify-between"><span class="flex gap-2"><IconSettings size="28" color="#facc15"/> Configurações </span> <IconChevronRight color="#facc15"/></a>
             <a href="" class="w-full flex items-center justify-between"><span class="flex gap-2"><IconBell size="28" color="#facc15"/> Notificações </span> <IconChevronRight color="#facc15"/></a>
             <a href="" class="w-full flex items-center justify-between"><span class="flex gap-2"><IconHelp size="28" color="#facc15"/> Ajuda </span> <IconChevronRight color="#facc15"/></a>
+            <button on:click={logout} class="w-full flex items-center justify-between text-left bg-transparent border-0 outline-none cursor-pointer hover:opacity-80">
+                <span class="flex gap-2"><IconLogout size="28" color="#facc15"/> Sair </span>
+            </button>
         </div>
     </main>
 </section>

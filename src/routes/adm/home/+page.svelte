@@ -32,7 +32,11 @@
                 navigateTo("/user");
             }}
         class="w-full flex gap-4 items-center">
-            <img src={Avatar} alt="Logo Olympo" class="w-20 h-20 rounded-full" />
+            <img
+                src={user?.imagePath ? `http://localhost:5001/api/Files/${user.imagePath}` : Avatar}
+                alt="Avatar"
+                class="w-20 h-20 rounded-full object-cover"
+            />
             <h1 class="w-3/5 text-white text-2xl font-karantina">
                 Bem vindo de volta <br />{user?.name || "Usuário"}
             </h1>
