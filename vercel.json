@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "http://localhost:5001/api/:path*",
-      "destination": "http://localhost:5001/api/http://localhost:5001/api/:path*"
+      "source": "http://191.252.195.85:5001/api/:path*",
+      "destination": "http://191.252.195.85:5001/api/http://191.252.195.85:5001/api/:path*"
     }
   ]
 }

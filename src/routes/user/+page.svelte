@@ -46,7 +46,7 @@
         </div>
         <div class="w-full flex flex-col gap-4 items-center text-center">
             <img
-                src={user?.imagePath ? `http://localhost:5001/api/Files/${user.imagePath}` : Avatar}
+                src={user?.imagePath ? `http://191.252.195.85:5001/api/Files/${user.imagePath}` : Avatar}
                 alt="Avatar"
                 class="w-20 h-20 rounded-full object-cover"
             />

@@ -23,13 +23,13 @@
         6: 'Sábado',
     };
 
-    const getSessionsByUserAndExercise = async (userId, exerciseId) => {
+    const getSessionsByUser = async (userId) => {
         try {
-            const response = await fetch(`http://localhost:5001/api/userexercise/sessions?userId=${userId}&exerciseId=${exerciseId}`);
+            const response = await fetch(`http://191.252.195.85:5001/api/userexercise/session/${userId}`);
 
             if (!response.ok) {
                 if (response.status === 404) return [];
-                throw new Error(`Erro ao buscar sessões para exercício ${exerciseId} do usuário ${userId}`);
+                throw new Error(`Erro ao buscar sessões do usuário ${userId}`);
             }
 
             const data = await response.json();
@@ -45,17 +45,18 @@
         try {
             const formData = {
                 Id: sessionData.id,
-                Repetitions: sessionData.repetitions || sessionData.repetitions,
-                Series: sessionData.series || sessionData.series,
-                Breaks: sessionData.breaks || sessionData.breaks,
-                Time: sessionData.time || sessionData.time,
+                Day: typeof sessionData.day !== 'undefined' && sessionData.day !== null ? +sessionData.day : +sessionData.originalDay,
+                Time: typeof sessionData.time !== 'undefined' && sessionData.time !== null ? sessionData.time : sessionData.originalTime,
+                Series: typeof sessionData.series !== 'undefined' && sessionData.series !== null ? sessionData.series : sessionData.originalSeries,
+                Repetitions: typeof sessionData.repetitions !== 'undefined' && sessionData.repetitions !== null ? sessionData.repetitions : sessionData.originalRepetitions,
+                Breaks: typeof sessionData.breaks !== 'undefined' && sessionData.breaks !== null ? sessionData.breaks : sessionData.originalBreaks,
                 ExerciseId: sessionData.exercise?.id || sessionData.exerciseId,
                 UserId: sessionData.user?.id || sessionData.userId
             };
 
             console.log('Atualizando sessão com os dados:', formData);
 
-            const response = await fetch(`http://localhost:5001/api/session/${sessionData.id}`, {
+            const response = await fetch(`http://191.252.195.85:5001/api/session/${sessionData.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
@@ -70,11 +71,24 @@
                 updatedSession = await response.json();
                 console.log('Sessão atualizada com sucesso:', updatedSession);
 
-                filteredSessions = filteredSessions.map(session =>
-                    session.id === updatedSession.id ? updatedSession : session
-                );
+                const sessions = await getSessionsByUser(formData.UserId);
+                filteredSessions = sessions.map(s => ({
+                    ...s,
+                    time: s.time ?? "",
+                    series: s.series ?? "",
+                    repetitions: s.repetitions ?? "",
+                    breaks: s.breaks ?? ""
+                }));
             } else {
                 console.log('Sessão atualizada com sucesso, mas sem corpo na resposta.');
+                const sessions = await getSessionsByUser(formData.UserId);
+                filteredSessions = sessions.map(s => ({
+                    ...s,
+                    time: s.time ?? "",
+                    series: s.series ?? "",
+                    repetitions: s.repetitions ?? "",
+                    breaks: s.breaks ?? ""
+                }));
             }
         } catch (err) {
             console.error("Erro ao atualizar sessão:", err);
@@ -84,7 +98,7 @@
     const deleteSession = async (sessionId) => {
         try {
             console.log(`Tentando deletar a sessão com ID: ${sessionId}`);
-            const response = await fetch(`http://localhost:5001/api/session/${sessionId}`, {
+            const response = await fetch(`http://191.252.195.85:5001/api/session/${sessionId}`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -114,7 +128,7 @@
 
         if (userId && exerciseId) {
             isLoading = true;
-            const sessions = await getSessionsByUserAndExercise(userId, exerciseId);
+            const sessions = await getSessionsByUser(userId);
             filteredSessions = sessions.map(s => ({
                 ...s,
                 time: s.time ?? "",
@@ -155,23 +169,37 @@
                     <!-- <pre class="bg-zinc-900 text-yellow-400 p-2 rounded text-xs mb-2">{JSON.stringify(session, null, 2)}</pre> -->
 
                     <div class="flex flex-col gap-2">
-                        <label>Tempo de sessões:</label>
-                        <input type="text" bind:value={session.time} class="border p-2 rounded" />
+                        <label for={`dia-select-${session.id}`}>Dia da semana:</label>
+                        <select
+                            id={`dia-select-${session.id}`}
+                            bind:value={session.day}
+                            class="border p-2 rounded"
+                            on:change={(e) => session.day = +e.target.value}
+                        >
+                            {#each Object.entries(dayNames) as [num, name]}
+                                <option value={num}>{name}</option>
+                            {/each}
+                        </select>
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <label>Quantidade de Séries:</label>
-                        <textarea type="text" bind:value={session.series} class="border p-2 rounded"></textarea>
+                        <label for={`tempo-${session.id}`}>Tempo de sessões:</label>
+                        <input id={`tempo-${session.id}`} type="text" bind:value={session.time} class="border p-2 rounded" />
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <label>Quantidade de repetições:</label>
-                        <input type="text" bind:value={session.repetitions} class="border p-2 rounded" />
+                        <label for={`series-${session.id}`}>Quantidade de Séries:</label>
+                        <textarea id={`series-${session.id}`} type="text" bind:value={session.series} class="border p-2 rounded"></textarea>
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <label>Tempo de intervalos:</label>
-                        <input type="text" bind:value={session.breaks} class="border p-2 rounded" />
+                        <label for={`repeticoes-${session.id}`}>Quantidade de repetições:</label>
+                        <input id={`repeticoes-${session.id}`} type="text" bind:value={session.repetitions} class="border p-2 rounded" />
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for={`intervalos-${session.id}`}>Tempo de intervalos:</label>
+                        <input id={`intervalos-${session.id}`} type="text" bind:value={session.breaks} class="border p-2 rounded" />
                     </div>
 
                     <div class="flex justify-between mt-4">
@@ -198,7 +226,7 @@
         margin-bottom: 5px;
     }
 
-    input, textarea {
+    input, textarea, select {
         padding: 10px;
         border-radius: 4px;
         border: 1px solid #ccc;

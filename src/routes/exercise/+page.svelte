@@ -24,12 +24,12 @@ async function fetchExercise() {
         console.log('ID do exercício:', selected.exerciseId);
         console.log('ID da session:', sessionId);
 
-        const response = await fetch(`http://localhost:5001/api/exercise/${selected.exerciseId}`);
+        const response = await fetch(`http://191.252.195.85:5001/api/exercise/${selected.exerciseId}`);
         if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
         exercise = await response.json();
 
         if (sessionId) {
-            const sessionRes = await fetch(`http://localhost:5001/api/session/${sessionId}`);
+            const sessionRes = await fetch(`http://191.252.195.85:5001/api/session/${sessionId}`);
             if (sessionRes.ok) {
                 session = await sessionRes.json();
                 console.log('Session:', session);
@@ -58,7 +58,7 @@ async function fetchExercise() {
 <section class="w-full min-h-dvh flex flex-col items-start gap-4 bg-[#2c2c2c]">
      <div id="hero"
         class="w-full h-60 flex items-start justify-between p-4 rounded-xl bg-cover bg-top"
-        style="background-image: url('http://localhost:5001/api/Files/{exercise.imagePath}')">
+        style="background-image: url('http://191.252.195.85:5001/api/Files/{exercise.imagePath}')">
         <a on:click={(e) => { 
                 e.stopPropagation(); 
                 goBack();

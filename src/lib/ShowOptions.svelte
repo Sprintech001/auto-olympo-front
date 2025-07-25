@@ -43,7 +43,7 @@
                 Day: dayMapping[day.name],
             };
 
-            const response = await fetch(`http://localhost:5001/api/session`, {
+            const response = await fetch(`http://191.252.195.85:5001/api/session`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -115,22 +115,22 @@
 
         <div class="flex flex-col gap-2">
             <label>Tempo de sessões (minutos):</label>
-            <input type="text" bind:value={sessionTime} min="1" required />
+            <input type="text" bind:value={sessionTime} />
         </div>
 
         <div class="flex flex-col gap-2">
             <label>Quantidade de Sessões:</label>
-            <input type="text" bind:value={session} min="1" required />
+            <textarea type="text" bind:value={session} class="border p-2 rounded"></textarea>
         </div>
 
         <div class="flex flex-col gap-2">
             <label>Quantidade de repetições:</label>
-            <input type="text" bind:value={repetitions} min="1" required />
+            <input type="text" bind:value={repetitions} />
         </div>
 
         <div class="flex flex-col gap-2">
             <label>Tempo de intervalos (minutos):</label>
-            <input type="text" bind:value={intervalTime} min="1" required />
+            <input type="text" bind:value={intervalTime} />
         </div>
 
         <button type="submit" class="px-4 py-2 bg-[#facc15] text-black rounded">Salvar</button>
@@ -163,7 +163,7 @@
         gap: 0.5rem;
     }
 
-    input[type="text"], input[type="checkbox"] {
+    input[type="text"], input[type="checkbox"], textarea {
         background-color: transparent;
         color: white;
         border: 1px solid white;

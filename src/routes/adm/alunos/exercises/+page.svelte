@@ -19,7 +19,7 @@
 
     async function getUserExercises(userId) {
         try {
-            const response = await fetch(`http://localhost:5001/api/userexercise/user/${userId}`);
+            const response = await fetch(`http://191.252.195.85:5001/api/userexercise/user/${userId}`);
             if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
             const data = await response.json();
             console.log('data:', data);

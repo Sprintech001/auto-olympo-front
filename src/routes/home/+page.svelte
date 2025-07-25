@@ -48,7 +48,7 @@ let diaSelecionado = null;
 
     async function fetchExercises(userId) {
         try {
-            const response = await fetch(`http://localhost:5001/api/userexercise/sessions/${userId}`);
+            const response = await fetch(`http://191.252.195.85:5001/api/userexercise/sessions/${userId}`);
             if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
             const data = await response.json();
             console.log('data:', data);
@@ -60,9 +60,17 @@ let diaSelecionado = null;
         }
     }
 
+
+    async function atualizarExerciciosPorDia(dia) {
+        if (user?.id) {
+            exercises = await fetchExercises(user.fullUserData.userData.id);
+            filteredExercises = exercises.filter(session => session.day === +dia);
+        }
+    }
+
     onMount(async () => {
         try {
-            const res = await fetch('http://localhost:5001/api/user/now');
+            const res = await fetch('http://191.252.195.85:5001/api/user/now');
             const json = await res.json();
 
             dataofMount = `${json.date} ${json.time}`;
@@ -81,10 +89,7 @@ let diaSelecionado = null;
             diaSelecionado = diaSemanaAtual;
             console.log("userSession atual:", user);
 
-            if (user?.id) {
-                exercises = await fetchExercises(user.fullUserData.userData.id);
-                filteredExercises = exercises.filter(session => session.day === diaSelecionado);
-            }
+            await atualizarExerciciosPorDia(diaSelecionado);
             console.log("Exercícios filtrados pelo dia:", filteredExercises);
         } catch(e) {
             error = e.message;
@@ -94,8 +99,8 @@ let diaSelecionado = null;
         sessionStorage.setItem('previousRoute', $page.url.pathname);
     });
 
-$: if (exercises && diaSelecionado !== null) {
-    filteredExercises = exercises.filter(session => session.day === +diaSelecionado);
+$: if (diaSelecionado !== null) {
+    atualizarExerciciosPorDia(diaSelecionado);
 }
 
 </script>
@@ -111,7 +116,7 @@ $: if (exercises && diaSelecionado !== null) {
             }}
             class="w-full flex gap-4 items-center">
             <img
-                src={user?.imagePath ? `http://localhost:5001/api/Files/${user.imagePath}` : Avatar}
+                src={user?.imagePath ? `http://191.252.195.85:5001/api/Files/${user.imagePath}` : Avatar}
                 alt="Avatar"
                 class="w-20 h-20 rounded-full object-cover"
             />
@@ -140,14 +145,14 @@ $: if (exercises && diaSelecionado !== null) {
             </div>
         </div>
         
-        <div id="desempenho" class="w-full p-4 flex flex-col gap-4 bg-[#D9D9D9] bg-opacity-10 rounded-xl">
+        <!-- <div id="desempenho" class="w-full p-4 flex flex-col gap-4 bg-[#D9D9D9] bg-opacity-10 rounded-xl">
             <h2 class="text-2xl text-white">Desempenho</h2>
             <div class="h-[200px] text-white text-2xl">
                 {#if data.length > 0}
                     <BarChart {data} x="date" y="value" axis="x" />
                 {/if}
             </div>
-        </div>
+        </div> -->
 
         <!-- <div id="exercicios" class="w-full flex flex-col gap-4 text-white">
             <div class="w-full flex justify-between items-center">
@@ -174,7 +179,10 @@ $: if (exercises && diaSelecionado !== null) {
                         class="w-20 h-14 text-lg rounded shadow transition font-bold
                             {+idx === diaSelecionado ? 'bg-[#FFDA00] text-black' : 'bg-[#6B6B6B] text-white hover:bg-yellow-200'}"
                         type="button"
-                        on:click={() => diaSelecionado = +idx}
+                        on:click={async () => {
+                            diaSelecionado = +idx;
+                            await atualizarExerciciosPorDia(diaSelecionado);
+                        }}
                     >
                         {name.slice(0,3)}
                     </button>

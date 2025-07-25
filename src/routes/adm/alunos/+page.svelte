@@ -9,7 +9,7 @@
 
     async function fetchAlunos() {
         try {
-            const response = await fetch('http://localhost:5001/api/auth/full-users/2');
+            const response = await fetch('http://191.252.195.85:5001/api/auth/full-users/2');
             if (!response.ok) {
                 throw new Error(`Erro: ${response.statusText}`);
             }
@@ -31,7 +31,7 @@
     const deleteUser = async (userId) => {  
         console.log("Excluindo usuário com ID:", userId);
         try {
-            const response = await fetch(`http://localhost:5001/api/user/${userId}`, {
+            const response = await fetch(`http://191.252.195.85:5001/api/user/${userId}`, {
                 method: "DELETE",
             });
 

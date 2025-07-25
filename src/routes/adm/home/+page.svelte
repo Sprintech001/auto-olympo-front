@@ -33,7 +33,7 @@
             }}
         class="w-full flex gap-4 items-center">
             <img
-                src={user?.imagePath ? `http://localhost:5001/api/Files/${user.imagePath}` : Avatar}
+                src={user?.imagePath ? `http://191.252.195.85:5001/api/Files/${user.imagePath}` : Avatar}
                 alt="Avatar"
                 class="w-20 h-20 rounded-full object-cover"
             />
