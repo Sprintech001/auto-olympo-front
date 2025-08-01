@@ -48,7 +48,8 @@ let diaSelecionado = null;
 
     async function fetchExercises(userId) {
         try {
-            const response = await fetch(`http://191.252.195.85:5001/api/userexercise/sessions/${userId}`);
+            console.log("Buscando exercícios do usuário:", userId);
+            const response = await fetch(`http://191.252.195.85:5001/api/userexercise/session/${userId}`);
             if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
             const data = await response.json();
             console.log('data:', data);

@@ -34,10 +34,10 @@
     const createSession = async (day) => {
         try {
             const formData = {
-                Repetitions: isNaN(parseInt(repetitions)) ? repetitions : parseInt(repetitions),
-                Series: isNaN(parseInt(session)) ? session : parseInt(session),
-                Breaks: isNaN(parseFloat(intervalTime)) ? intervalTime : parseFloat(intervalTime),
-                Time: isNaN(parseFloat(sessionTime)) ? sessionTime : parseFloat(sessionTime),
+                Repetitions: `${repetitions}`,
+                Series: `${session}`,
+                Breaks: `${intervalTime}`,
+                Time: `${sessionTime}`,
                 ExerciseId: exerciseId,
                 userId: userId,
                 Day: dayMapping[day.name],
